@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/AlexAbS1993/shooter/issues"
   },
-  "homepage": "https://github.com/AlexAbS1993/shooter#readme"
+  "homepage": "https://github.com/AlexAbS1993/shooter#readme",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
 }
