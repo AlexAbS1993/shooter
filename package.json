@@ -4,7 +4,8 @@
   "description": "Небольшая программа, позволяющая использовать разные пресеты настроек для отправки множественных непрерывных запросов на сервер, обслуживающий базу данных.",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "cross-env LEVEL=min node --env-file=.env index.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
   },
   "homepage": "https://github.com/AlexAbS1993/shooter#readme",
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "jest": "^29.7.0"
   },
   "dependencies": {
