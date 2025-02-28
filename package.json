@@ -23,5 +23,8 @@
   "homepage": "https://github.com/AlexAbS1993/shooter#readme",
   "devDependencies": {
     "jest": "^29.7.0"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
   }
 }
