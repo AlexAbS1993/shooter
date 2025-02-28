@@ -15,17 +15,17 @@ describe('Функция определения конфигурационног
     })
     test('Передача уровня min возвращает соответсвующее ожиданию название файла', () => {
         const MIN_VALUE = 'min'
-        const EXPECTED_FILENAME = '.min-env'
+        const EXPECTED_FILENAME = '.env.min'
         expect(configDefinition(MIN_VALUE)).toBe(EXPECTED_FILENAME)
     })
     test('Передача уровня middle возвращает соответсвующее ожиданию название файла', () => {
         const MIDDLE_VALUE = 'middle'
-        const EXPECTED_FILENAME = '.middle-env'
+        const EXPECTED_FILENAME = '.env.middle'
         expect(configDefinition(MIDDLE_VALUE)).toBe(EXPECTED_FILENAME)
     })
     test('Передача уровня high возвращает соответсвующее ожиданию название файла', () => {
         const HIGH_VALUE = 'high'
-        const EXPECTED_FILENAME = '.high-env'
+        const EXPECTED_FILENAME = '.env.high'
         expect(configDefinition(HIGH_VALUE)).toBe(EXPECTED_FILENAME)
     })
 })

@@ -14,13 +14,13 @@ ${values_lvls.map((value, index) => `${index+1}) ${value}`).join(', \n')}`)
     }
     switch(lvl){
         case MIN_VALUE: {
-            return `.${MIN_VALUE}-env`
+            return `.env.${MIN_VALUE}`
         }
         case MIDDLE_VALUE: {
-            return `.${MIDDLE_VALUE}-env`
+            return `.env.${MIDDLE_VALUE}`
         }
         case HIGH_VALUE: {
-            return `.${HIGH_VALUE}-env`
+            return `.env.${HIGH_VALUE}`
         }
         default: {
             throw new Error('Для данного значения ещё не реализован обработчик. Обратитесь к разработчику программы')
