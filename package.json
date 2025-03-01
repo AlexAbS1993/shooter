@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "start": "cross-env LEVEL=min node --env-file=.env index.js"
+    "start_min": "cross-env LEVEL=min node --env-file=.env index.js",
+    "start_mid": "cross-env LEVEL=middle node --env-file=.env index.js",
+    "start_h": "cross-env LEVEL=high node --env-file=.env index.js"
   },
   "repository": {
     "type": "git",
