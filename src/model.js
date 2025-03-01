@@ -3,7 +3,9 @@ class AbstractModel{
     tables = [{
         title: '',
         reqFields: [''],
-        filters: {}
+        filters: {},
+        fields: [''],
+        insertTypes: ['']
     }]
     constructor(){
         throw new Error('Abstract')
