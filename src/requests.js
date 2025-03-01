@@ -1,4 +1,5 @@
 let {fetch} = require('undici')
+let {generate, count} = require('random-words')
 const AbstractModel = require('./model')
 
 // Класс запроса, который реализует команды через undici для нагрузки сервера с базой данных
@@ -13,6 +14,8 @@ class Request{
     SELECT = "SELECT"
     INSERT = "INSERT"
     DELETE = "DELETE"
+    MIN_LENGTH_RANDOM_WORLD = 5
+    MAX_LENGTH_RANDOM_WORLD = 10
     /**
      * 
      * @param {AbstractModel} model 
@@ -34,7 +37,7 @@ class Request{
         this.#changeTableIndex()
         return await (await response).json()
     }
-    toInsert(){
+    async toInsert(){
         let destination_point = this.#calculate_dest_point(this.INSERT)
         let body = this.#construct_body(insertTypes, fields)
         let response = fetch(destination_point, {
@@ -42,6 +45,7 @@ class Request{
             body
         })
         this.#changeTableIndex()
+        return await (await response).json()
     }
     toDelete(){
         
@@ -77,19 +81,23 @@ class Request{
             let type = insertTypes[index]
             switch(type){
                 case 'string': {
-                    
+                    body[fields[index]] = generate({ minLength: this.MIN_LENGTH_RANDOM_WORLD, maxLength: this.MAX_LENGTH_RANDOM_WORLD })
                     break
                 }
                 case 'number': {
-
+                    body[fields[index]] = count()
                     break
                 }
                 case 'boolean': {
-
+                    body[fields[index]] = Math.random() > 0.5 ? true : false
                     break
+                }
+                default: {
+                    body[fields[index]] = null
                 }
             }
         }
+        return body
     }
 }
 
