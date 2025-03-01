@@ -1,4 +1,5 @@
 let {fetch} = require('undici')
+const AbstractModel = require('./model')
 
 // Класс запроса, который реализует команды через undici для нагрузки сервера с базой данных
 // Класс принимает модель, которая должна реализовать общее представление о таблицах на удалённом сервере
@@ -8,10 +9,14 @@ class Request{
     #current_table_index = 0
     #tables
     GET = "GET"
+    POST = "POST"
+    SELECT = "SELECT"
+    INSERT = "INSERT"
+    DELETE = "DELETE"
     /**
      * 
-     * @param {*} model 
-     * @param {*} point 
+     * @param {AbstractModel} model 
+     * @param {string} point 
      * @param {string[]} tables
      */
     constructor(model, point){
@@ -22,7 +27,7 @@ class Request{
         this.point = point
     }
     async toSelect(){
-        let destination_point = this.#calculate_dest_point()
+        let destination_point = this.#calculate_dest_point(this.SELECT)
         let response = fetch(destination_point, {
             method: this.GET
         })
@@ -30,12 +35,16 @@ class Request{
         return await (await response).json()
     }
     toInsert(){
-        let {title, reqFields, filters} = this.#getTableData()
-
+        let destination_point = this.#calculate_dest_point(this.INSERT)
+        let body = this.#construct_body(insertTypes, fields)
+        let response = fetch(destination_point, {
+            method: this.POST,
+            body
+        })
         this.#changeTableIndex()
     }
     toDelete(){
-        let {title, reqFields, filters} = this.#getTableData()
+        
 
         this.#changeTableIndex()
     }
@@ -44,14 +53,43 @@ class Request{
         return
     }
     #getTableData(){
-        let {title, reqFields, filters} = this.#tables[this.#current_table_index]
+        let {title, reqFields, filters, insertTypes, fields} = this.#tables[this.#current_table_index]
         return {
-            title, reqFields, filters
+            title, reqFields, filters, insertTypes, fields
         }
     }
-    #calculate_dest_point(){
-        let {title, reqFields, filters} = this.#getTableData()
-        return `${this.point}/${title}?REQ=${reqFields.join('-')}`
+    #calculate_dest_point(operation){
+        switch(operation){
+            case this.GET: {
+            let {title, reqFields} = this.#getTableData()
+            return `${this.point}/${title}?REQ=${reqFields.join('-')}`
+            }
+            default: {
+            let {title} = this.#getTableData()
+            return `${this.point}/${title}`
+            }
+        }
+        
+    }
+    #construct_body(insertTypes, fields){
+        let body = {}
+        for(let index in fields){
+            let type = insertTypes[index]
+            switch(type){
+                case 'string': {
+                    
+                    break
+                }
+                case 'number': {
+
+                    break
+                }
+                case 'boolean': {
+
+                    break
+                }
+            }
+        }
     }
 }
 
