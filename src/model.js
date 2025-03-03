@@ -7,8 +7,9 @@ class AbstractModel{
         fields: [''],
         insertTypes: ['']
     }]
-    selectRequestSchema
-    deleteRequestSchema
+    selectRequestSchema = {table1: {parametres: [], parametres_types: []}}
+    deleteRequestSchema = {table1: {parametres: [], parametres_types: []}}
+    insertRequestSchema = {table1: {parametres: [], parametres_types: []}}
     constructor(){
         throw new Error('Abstract')
     }
@@ -21,10 +22,13 @@ class AbstractModel{
     createTableModel(){
         throw new Error('Dont implement')
     }
-    getSelectRequestSchema(){
+    getSelectRequestSchema(title){
         throw new Error('Dont implement')
     }
-    getDeleteRequestSchema(){
+    getDeleteRequestSchema(title){
+        throw new Error('Dont implement')
+    }
+    getInsertRequestSchema(title){
         throw new Error('Dont implement')
     }
 }

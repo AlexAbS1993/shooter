@@ -18,6 +18,12 @@ class Request{
     MAX_LENGTH_RANDOM_WORLD = 10
     SELECT_REQUEST_SCHEMA = "SELECT_REQUEST_SCHEMA"
     DELETE_REQUEST_SCHEMA = 'DELETE_REQUEST_SCHEMA'
+    INSERT_REQUEST_SCHEMA = 'INSERT_REQUEST_SCHEMA'
+    #operation_matching_schema = {
+        [this.DELETE]:this.DELETE_REQUEST_SCHEMA,
+        [this.SELECT]: this.SELECT_REQUEST_SCHEMA,
+        [this.INSERT]: this.INSERT_REQUEST_SCHEMA
+    }
     /**
      * 
      * @param {AbstractModel} model 
@@ -32,7 +38,7 @@ class Request{
         this.point = point
     }
     async toSelect(){
-        let destination_point = this.#calculate_dest_point()
+        let destination_point = this.#calculate_dest_point(this.SELECT)
         let response = fetch(destination_point, {
             method: this.GET
         })
@@ -40,7 +46,7 @@ class Request{
         return await (await response).json()
     }
     async toInsert(){
-        let destination_point = this.#calculate_dest_point()
+        let destination_point = this.#calculate_dest_point(this.INSERT)
         let body = this.#construct_body(insertTypes, fields)
         let response = fetch(destination_point, {
             method: this.POST,
@@ -50,7 +56,7 @@ class Request{
         return await (await response).json()
     }
     toDelete(){
-        let destination_point = this.#calculate_dest_point()
+        let destination_point = this.#calculate_dest_point(this.DELETE)
         this.#changeTableIndex()
     }
     #changeTableIndex(){
@@ -63,23 +69,39 @@ class Request{
             title, reqFields, filters, insertTypes, fields
         }
     }
-    #getRequestSchema(type){
+
+    #calculate_dest_point(operation){
+        let {title} = this.#getTableData()
+        let schema 
+        try {
+            schema = this.#getRequestSchema(title, this.#operation_matching_schema[operation])
+        }
+        catch(e){
+            return `${this.point}/${title}`
+        }
+        if (!schema){
+            return `${this.point}/${title}`
+        }
+        let result = `${this.point}/${title}`
+        return 
+    }
+    #getRequestSchema(title, type){
             switch(type){
                 case this.DELETE_REQUEST_SCHEMA: {
-                    return this.#model.getDeleteRequestSchema()
+                    return this.#model.getDeleteRequestSchema(title)
                 }
                 case this.SELECT_REQUEST_SCHEMA: {
-                    return this.#model.getSelectRequestSchema()
+                    return this.#model.getSelectRequestSchema(title)
+                }
+                case this.INSERT_REQUEST_SCHEMA: {
+                    return this.#model.getInsertRequestSchema(title)
                 }
                 default: {
-                    throw new Error('Такой схемы нет')
+                    throw new Error('Такой схемы не существует')
                 }
-            }
-    }
-    #calculate_dest_point(){
-        let {title} = this.#getTableData()
-        return `${this.point}/${title}`
-    }
+            } 
+}
+
     #construct_body(insertTypes, fields){
         let body = {}
         for(let index in fields){
