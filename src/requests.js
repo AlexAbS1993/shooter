@@ -30,7 +30,7 @@ class Request{
         this.point = point
     }
     async toSelect(){
-        let destination_point = this.#calculate_dest_point(this.SELECT)
+        let destination_point = this.#calculate_dest_point()
         let response = fetch(destination_point, {
             method: this.GET
         })
@@ -38,7 +38,7 @@ class Request{
         return await (await response).json()
     }
     async toInsert(){
-        let destination_point = this.#calculate_dest_point(this.INSERT)
+        let destination_point = this.#calculate_dest_point()
         let body = this.#construct_body(insertTypes, fields)
         let response = fetch(destination_point, {
             method: this.POST,
@@ -48,8 +48,6 @@ class Request{
         return await (await response).json()
     }
     toDelete(){
-        
-
         this.#changeTableIndex()
     }
     #changeTableIndex(){
@@ -62,18 +60,9 @@ class Request{
             title, reqFields, filters, insertTypes, fields
         }
     }
-    #calculate_dest_point(operation){
-        switch(operation){
-            case this.GET: {
-            let {title, reqFields} = this.#getTableData()
-            return `${this.point}/${title}?REQ=${reqFields.join('-')}`
-            }
-            default: {
-            let {title} = this.#getTableData()
-            return `${this.point}/${title}`
-            }
-        }
-        
+    #calculate_dest_point(){
+        let {title} = this.#getTableData()
+        return `${this.point}/${title}`
     }
     #construct_body(insertTypes, fields){
         let body = {}
