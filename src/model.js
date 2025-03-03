@@ -7,9 +7,9 @@ class AbstractModel{
         fields: [''],
         insertTypes: ['']
     }]
-    selectRequestSchema = {table1: {parametres: [], parametres_types: []}}
-    deleteRequestSchema = {table1: {parametres: [], parametres_types: []}}
-    insertRequestSchema = {table1: {parametres: [], parametres_types: []}}
+    selectRequestSchema = {table1: {get: {parametres: [], parametres_types: []}}}
+    deleteRequestSchema = {table1: {get: {parametres: [], parametres_types: []}}}
+    insertRequestSchema = {table1: {get: {parametres: [], parametres_types: []}}}
     constructor(){
         throw new Error('Abstract')
     }

@@ -73,6 +73,7 @@ class Request{
     #calculate_dest_point(operation){
         let {title} = this.#getTableData()
         let schema 
+        // Здесь ведется работа с интерфейсом модели, поэтому результат может быть как undefined, так и ошибка. В обоих случаях возвращаем url + title таблицы
         try {
             schema = this.#getRequestSchema(title, this.#operation_matching_schema[operation])
         }
@@ -82,8 +83,7 @@ class Request{
         if (!schema){
             return `${this.point}/${title}`
         }
-        let result = `${this.point}/${title}`
-        return 
+        return this.#add_schema_options(schema, operation, `${this.point}/${title}`)
     }
     #getRequestSchema(title, type){
             switch(type){
@@ -101,6 +101,19 @@ class Request{
                 }
             } 
 }
+    #add_schema_options(schema, operation, start_with){
+        let result = start_with
+        let {parametres, parametres_types} =  schema[operation]
+        for (let index in parametres){
+            if (index === parametres.length - 1){
+                result += `${this.#construct_params(parametres[index], parametres_types[index])}`
+            }
+            else {
+                result += `${this.#construct_params(parametres[index], parametres_types[index])}&`
+            }
+        }
+        return result
+    }
 
     #construct_body(insertTypes, fields){
         let body = {}
@@ -125,6 +138,23 @@ class Request{
             }
         }
         return body
+    }
+
+    #construct_params(title, type){
+        return `${title}=${this.#generate_value_by_type(type)}`
+    }
+    #generate_value_by_type(type){
+        switch(type){
+            case 'string': {
+               return generate({ minLength: this.MIN_LENGTH_RANDOM_WORLD, maxLength: this.MAX_LENGTH_RANDOM_WORLD })
+            }
+            case 'number': {
+                return body[fields[index]] = count()
+            }
+            case 'boolean': {
+                return Math.random() > 0.5 ? true : false
+            }
+        }
     }
 }
 
