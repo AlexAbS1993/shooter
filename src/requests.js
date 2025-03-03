@@ -55,7 +55,7 @@ class Request{
         this.#changeTableIndex()
         return await (await response).json()
     }
-    toDelete(){
+    async toDelete(){
         let destination_point = this.#calculate_dest_point(this.DELETE)
         this.#changeTableIndex()
     }
