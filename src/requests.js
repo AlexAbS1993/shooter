@@ -16,6 +16,8 @@ class Request{
     DELETE = "DELETE"
     MIN_LENGTH_RANDOM_WORLD = 5
     MAX_LENGTH_RANDOM_WORLD = 10
+    SELECT_REQUEST_SCHEMA = "SELECT_REQUEST_SCHEMA"
+    DELETE_REQUEST_SCHEMA = 'DELETE_REQUEST_SCHEMA'
     /**
      * 
      * @param {AbstractModel} model 
@@ -48,6 +50,7 @@ class Request{
         return await (await response).json()
     }
     toDelete(){
+        let destination_point = this.#calculate_dest_point()
         this.#changeTableIndex()
     }
     #changeTableIndex(){
@@ -59,6 +62,19 @@ class Request{
         return {
             title, reqFields, filters, insertTypes, fields
         }
+    }
+    #getRequestSchema(type){
+            switch(type){
+                case this.DELETE_REQUEST_SCHEMA: {
+                    return this.#model.getDeleteRequestSchema()
+                }
+                case this.SELECT_REQUEST_SCHEMA: {
+                    return this.#model.getSelectRequestSchema()
+                }
+                default: {
+                    throw new Error('Такой схемы нет')
+                }
+            }
     }
     #calculate_dest_point(){
         let {title} = this.#getTableData()
