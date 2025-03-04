@@ -24,6 +24,7 @@ class Request{
         [this.SELECT]: this.SELECT_REQUEST_SCHEMA,
         [this.INSERT]: this.INSERT_REQUEST_SCHEMA
     }
+    #inner_statistics = {}
     /**
      * 
      * @param {AbstractModel} model 
@@ -36,12 +37,21 @@ class Request{
         this.#count_of_tables = this.#model.getCountOfTables()
         this.#tables = this.#model.getTables()
         this.point = point
+        // Инициализация статистики
+        for (let table of this.#tables){
+            this.#inner_statistics[table.title] = {
+                [this.SELECT]: 0,
+                [this.INSERT]: 0,
+                [this.DELETE]: 0
+            }
+        }
     }
     async toSelect(){
         let destination_point = this.#calculate_dest_point(this.SELECT)
         let response = fetch(destination_point, {
             method: this.GET
         })
+        this.#statisticUpdate(this.SELECT)
         this.#changeTableIndex()
         return await (await response).json()
     }
@@ -52,11 +62,13 @@ class Request{
             method: this.POST,
             body
         })
+        this.#statisticUpdate(this.INSERT)
         this.#changeTableIndex()
         return await (await response).json()
     }
     async toDelete(){
         let destination_point = this.#calculate_dest_point(this.DELETE)
+        this.#statisticUpdate(this.DELETE)
         this.#changeTableIndex()
     }
     #changeTableIndex(){
@@ -155,6 +167,12 @@ class Request{
                 return Math.random() > 0.5 ? true : false
             }
         }
+    }
+    #statisticUpdate(method){
+        this.#inner_statistics[this.#tables[this.#current_table_index].title][method]++
+    }
+    getStatistic(){
+        return this.#inner_statistics
     }
 }
 
