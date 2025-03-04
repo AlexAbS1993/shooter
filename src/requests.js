@@ -1,5 +1,5 @@
 let {fetch} = require('undici')
-let {generate, count} = require('random-words')
+const {generate, count} = require('../lib/random') 
 const AbstractModel = require('./model')
 
 // Класс запроса, который реализует команды через undici для нагрузки сервера с базой данных
