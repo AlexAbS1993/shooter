@@ -171,6 +171,9 @@ class Request{
     #statisticUpdate(method){
         this.#inner_statistics[this.#tables[this.#current_table_index].title][method]++
     }
+    getStatistic(){
+        return this.#inner_statistics
+    }
 }
 
 module.exports = Request
