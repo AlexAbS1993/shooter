@@ -1,7 +1,7 @@
 const AbstractModel = require("./model");
 
 // Дефолтная модель для частного использования
-class DefaultModel extends AbstractModel{
+class TestModel extends AbstractModel{
     constructor(){
         super()
     }
@@ -14,4 +14,4 @@ class DefaultModel extends AbstractModel{
     
 }
 
-module.exports = DefaultModel
+module.exports = TestModel
