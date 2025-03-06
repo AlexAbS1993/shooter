@@ -65,7 +65,9 @@ class AbstractModel {
     createTableModel() {
       throw new Error('Dont implement');
     }
-  
+    createRequestSchema(tableName, method, schema){
+      throw new Error('Dont implement');
+    }
     /**
      * Метод для получения схемы выборки данных для указанной таблицы.
      * @param {string} title Название таблицы.
