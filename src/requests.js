@@ -145,7 +145,7 @@ class Request{
                     break
                 }
                 default: {
-                    body[fields[index]] = null
+                    body[fields[index]] = 'DEFAULT'
                 }
             }
         }
