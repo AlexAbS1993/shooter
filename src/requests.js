@@ -76,9 +76,9 @@ class Request{
         return
     }
     #getTableData(){
-        let {title, reqFields, filters, insertTypes, fields} = this.#tables[this.#current_table_index]
+        let {title, filters, insertTypes, fields} = this.#tables[this.#current_table_index]
         return {
-            title, reqFields, filters, insertTypes, fields
+            title, filters, insertTypes, fields
         }
     }
 
@@ -145,7 +145,7 @@ class Request{
                     break
                 }
                 default: {
-                    body[fields[index]] = null
+                    body[fields[index]] = 'DEFAULT'
                 }
             }
         }
