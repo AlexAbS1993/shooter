@@ -1,10 +1,10 @@
 const AbstractModel = require("./model");
-const {productsModel, usersModel} = require('./test_tables')
+const [productsTable, usersTable] = require('./test_tables')
 
 // Дефолтная модель для частного использования
 class TestModel extends AbstractModel{
     tables =[
-        productsModel, usersModel
+        productsTable, usersTable
     ]
     selectRequestSchema = {}
     deleteRequestSchema = {}

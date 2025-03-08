@@ -39,7 +39,7 @@ class AbstractModel {
      * @throws {Error} Выбрасывает ошибку при вызове.
      */
     constructor() {
-      throw new Error('Abstract');
+
     }
   
     /**
@@ -96,3 +96,4 @@ class AbstractModel {
     }
   }
   
+  module.exports = AbstractModel
