@@ -34,10 +34,6 @@ class AbstractModel {
      */
     insertRequestSchema = {table1: {get: {parametres: [], parametres_types: []}}};
   
-    /**
-     * Конструктор класса выбрасывает ошибку, поскольку этот класс является абстрактным.
-     * @throws {Error} Выбрасывает ошибку при вызове.
-     */
     constructor() {
 
     }
