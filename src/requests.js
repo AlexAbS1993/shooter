@@ -4,7 +4,7 @@ const AbstractModel = require('./model')
 
 // Класс запроса, который реализует команды через undici для нагрузки сервера с базой данных
 // Класс принимает модель, которая должна реализовать общее представление о таблицах на основе интерфейса AbstractModel на удалённом сервере 
-class Request{
+class RequestWide{
     #model
     #count_of_tables
     #current_table_index = 0
@@ -47,47 +47,47 @@ class Request{
         }
     }
     async toSelect(){
-        let destination_point = this.#calculate_dest_point(this.SELECT)
+        let destination_point = this.calculate_dest_point(this.SELECT)
         let response = fetch(destination_point, {
             method: this.GET
         })
-        this.#statisticUpdate(this.SELECT)
-        this.#changeTableIndex()
+        this.statisticUpdate(this.SELECT)
+        this.changeTableIndex()
         return await (await response).json()
     }
     async toInsert(){
-        let destination_point = this.#calculate_dest_point(this.INSERT)
-        let body = this.#construct_body(insertTypes, fields)
+        let destination_point = this.calculate_dest_point(this.INSERT)
+        let body = this.construct_body(insertTypes, fields)
         let response = fetch(destination_point, {
             method: this.POST,
             body
         })
-        this.#statisticUpdate(this.INSERT)
-        this.#changeTableIndex()
+        this.statisticUpdate(this.INSERT)
+        this.changeTableIndex()
         return await (await response).json()
     }
     async toDelete(){
-        let destination_point = this.#calculate_dest_point(this.DELETE)
-        this.#statisticUpdate(this.DELETE)
-        this.#changeTableIndex()
+        let destination_point = this.calculate_dest_point(this.DELETE)
+        this.statisticUpdate(this.DELETE)
+        this.changeTableIndex()
     }
-    #changeTableIndex(){
+    changeTableIndex(){
         this.#current_table_index = Math.floor(Math.random() * this.#count_of_tables)
         return
     }
-    #getTableData(){
+    getTableData(){
         let {title, filters, insertTypes, fields} = this.#tables[this.#current_table_index]
         return {
             title, filters, insertTypes, fields
         }
     }
 
-    #calculate_dest_point(operation){
-        let {title} = this.#getTableData()
+    calculate_dest_point(operation){
+        let {title} = this.getTableData()
         let schema 
         // Здесь ведется работа с интерфейсом модели, поэтому результат может быть как undefined, так и ошибка. В обоих случаях возвращаем url + title таблицы
         try {
-            schema = this.#getRequestSchema(title, this.#operation_matching_schema[operation])
+            schema = this.getRequestSchema(title, this.#operation_matching_schema[operation])
         }
         catch(e){
             return `${this.point}/${title}`
@@ -95,9 +95,9 @@ class Request{
         if (!schema){
             return `${this.point}/${title}`
         }
-        return this.#add_schema_options(schema, operation, `${this.point}/${title}`)
+        return this.add_schema_options(schema, operation, `${this.point}/${title}`)
     }
-    #getRequestSchema(title, type){
+    getRequestSchema(title, type){
             switch(type){
                 case this.DELETE_REQUEST_SCHEMA: {
                     return this.#model.getDeleteRequestSchema(title)
@@ -113,21 +113,21 @@ class Request{
                 }
             } 
 }
-    #add_schema_options(schema, operation, start_with){
+    add_schema_options(schema, operation, start_with){
         let result = start_with
         let {parametres, parametres_types} =  schema[operation]
         for (let index in parametres){
             if (index === parametres.length - 1){
-                result += `${this.#construct_params(parametres[index], parametres_types[index])}`
+                result += `${this.construct_params(parametres[index], parametres_types[index])}`
             }
             else {
-                result += `${this.#construct_params(parametres[index], parametres_types[index])}&`
+                result += `${this.construct_params(parametres[index], parametres_types[index])}&`
             }
         }
         return result
     }
 
-    #construct_body(insertTypes, fields){
+    construct_body(insertTypes, fields){
         let body = {}
         for(let index in fields){
             let type = insertTypes[index]
@@ -152,10 +152,10 @@ class Request{
         return body
     }
 
-    #construct_params(title, type){
-        return `${title}=${this.#generate_value_by_type(type)}`
+    construct_params(title, type){
+        return `${title}=${this.generate_value_by_type(type)}`
     }
-    #generate_value_by_type(type){
+    generate_value_by_type(type){
         switch(type){
             case 'string': {
                return generate({ minLength: this.MIN_LENGTH_RANDOM_WORLD, maxLength: this.MAX_LENGTH_RANDOM_WORLD })
@@ -168,7 +168,7 @@ class Request{
             }
         }
     }
-    #statisticUpdate(method){
+   statisticUpdate(method){
         this.#inner_statistics[this.#tables[this.#current_table_index].title][method]++
     }
     getStatistic(){
@@ -176,4 +176,4 @@ class Request{
     }
 }
 
-module.exports = Request
+module.exports = RequestWide
