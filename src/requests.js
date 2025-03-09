@@ -76,12 +76,14 @@ class RequestWide{
         return
     }
     getTableData(){
-        let {title, filters, insertTypes, fields} = this.#tables[this.#current_table_index]
+        let {title, reqFields, insertTypes, fields} = this.#tables[this.#current_table_index]
         return {
-            title, filters, insertTypes, fields
+            title, reqFields, insertTypes, fields
         }
     }
-
+    getTableIndex(){
+        return this.#current_table_index
+    }
     calculate_dest_point(operation){
         let {title} = this.getTableData()
         let schema 

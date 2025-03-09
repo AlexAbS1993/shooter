@@ -16,7 +16,7 @@ class Request{
             return await this.#request_wide.toDelete()
         }
     getStatisctic(){
-
+        
     }
 }
 
