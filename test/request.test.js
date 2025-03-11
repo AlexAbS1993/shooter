@@ -1,11 +1,13 @@
 const RequestWide = require("../src/requests")
 const TestModel = require('../src/testModel')
-const [productsTable, usersTable] = require('../src/test_tables')
 
 const MOCK_END_POINT = 'http://mock.com'
 const PRODUCTS = 'products'
 const USERS = 'users'
 const DEFAULT = 'DEFAULT'
+const STRING = 'string'
+const NUMBER = 'number'
+const BOOLEAN = 'boolean'
 describe('Сущность Request организует работу запросов на удалённый сервер, нагружая тем самым базу данных', () => {
     const test_model = new TestModel()
     let request = new RequestWide(test_model, MOCK_END_POINT)
@@ -45,10 +47,22 @@ describe('Сущность Request организует работу запро�
         expect(counter < 999).toBe(true)
         console.log('counter is', counter)
     })
-    test('Дефолтная статистика записывается после каждого исполнения', () => {
-        let {title} = request.getTableData()
-        request.statisticUpdate(request.INSERT)
-        expect(request.getStatistic()[title]).toEqual({[request.SELECT]: 0, [request.INSERT]: 1, [request.DELETE]:0})
+    describe('Сущность Request способна собирать, обновлять и выдавать статистику совершенной работы', () => {
+        test('Дефолтная статистика записывается после каждого исполнения', () => {
+            let {title} = request.getTableData()
+            request.statisticUpdate(request.INSERT)
+            expect(request.getStatistic()[title]).toEqual({[request.SELECT]: 0, [request.INSERT]: 1, [request.DELETE]:0})
+        })
+    })
+    test('Метод generate_value_by_type умеет создавать случайные значения для параметров в url', () => {
+        expect(typeof request.generate_value_by_type(STRING)).toBe(STRING)
+        expect(typeof request.generate_value_by_type(NUMBER)).toBe(NUMBER)
+        expect(typeof request.generate_value_by_type(BOOLEAN)).toBe(BOOLEAN)
+    })
+    test('Метод construct_params создает строку-параметр по переданному имени и типу', () => {
+        let param = request.construct_params(USERS, STRING)
+        expect(typeof param).toBe(STRING)
+        expect(param.includes(USERS)).toBe(true)
     })
     describe('При отправке post-запроса срабатывает автогенерация тела в зависимости от модели', () => {
         test('Генерируется строка при передаче соответствующих параметров', () => {

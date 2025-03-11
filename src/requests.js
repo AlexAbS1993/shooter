@@ -164,7 +164,7 @@ class RequestWide{
                return generate({ minLength: this.MIN_LENGTH_RANDOM_WORLD, maxLength: this.MAX_LENGTH_RANDOM_WORLD })
             }
             case 'number': {
-                return body[fields[index]] = genNum()
+                return genNum()
             }
             case 'boolean': {
                 return Math.random() > 0.5 ? true : false
