@@ -3,7 +3,8 @@ const TestModel = require('../src/testModel')
 const [productsTable, usersTable] = require('../src/test_tables')
 
 const MOCK_END_POINT = 'http://mock.com'
-
+const PRODUCTS = 'products'
+const USERS = 'users'
 describe('Сущность Request организует работу запросов на удалённый сервер, нагружая тем самым базу данных', () => {
     const test_model = new TestModel()
     let request = new RequestWide(test_model, MOCK_END_POINT)
@@ -21,18 +22,26 @@ describe('Сущность Request организует работу запро�
                     expect(tableData[key]).toBeDefined()
                 }
             })
-            test('После выполнения запроса может измениться index действующей таблицы', () => {
-                let counter = 0
-                for (let i = 0; i < 1000; i++){
-                    request.changeTableIndex()
-                    let currentIndex = request.getTableIndex()
-                    counter += currentIndex
-                }
-                expect(counter != 0).toBe(true)
-                expect(counter < 999).toBe(true)
-                console.log('counter is', counter)
+            test('Метод получения схемы возвращает схему или undefined, если ее нет', () => {
+                let schema = request.getRequestSchema(PRODUCTS, request.SELECT_REQUEST_SCHEMA)
+                expect(schema).toBeUndefined()
             })
-        }
-        
+            test('calculate_dest_point возвращает верный url запроса',() => {
+                let dest_point = request.calculate_dest_point(request.SELECT)
+                let {title} = request.getTableData()
+                expect(dest_point).toBe(`${request.point}/${title}`)
+            }) 
+        }  
     )
+    test('После выполнения запроса может измениться index действующей таблицы', () => {
+        let counter = 0
+        for (let i = 0; i < 1000; i++){
+            request.changeTableIndex()
+            let currentIndex = request.getTableIndex()
+            counter += currentIndex
+        }
+        expect(counter != 0).toBe(true)
+        expect(counter < 999).toBe(true)
+        console.log('counter is', counter)
+    })
 })
