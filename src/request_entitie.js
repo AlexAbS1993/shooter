@@ -15,9 +15,9 @@ class Request{
         async toDelete(){
             return await this.#request_wide.toDelete()
         }
-    getStatisctic(){
-        
-    }
+        getStatisctic(){
+            return this.#request_wide.getStatistic()
+        }
 }
 
 
