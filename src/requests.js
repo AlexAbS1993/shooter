@@ -1,5 +1,5 @@
 let {fetch} = require('undici')
-const {generate, count} = require('../lib/random') 
+const {generate, genNum} = require('../lib/random') 
 const AbstractModel = require('./model')
 
 // Класс запроса, который реализует команды через undici для нагрузки сервера с базой данных
@@ -57,6 +57,7 @@ class RequestWide{
     }
     async toInsert(){
         let destination_point = this.calculate_dest_point(this.INSERT)
+        let {insertTypes, fields} = this.getTableData()
         let body = this.construct_body(insertTypes, fields)
         let response = fetch(destination_point, {
             method: this.POST,
@@ -139,7 +140,7 @@ class RequestWide{
                     break
                 }
                 case 'number': {
-                    body[fields[index]] = count()
+                    body[fields[index]] = genNum()
                     break
                 }
                 case 'boolean': {
@@ -163,7 +164,7 @@ class RequestWide{
                return generate({ minLength: this.MIN_LENGTH_RANDOM_WORLD, maxLength: this.MAX_LENGTH_RANDOM_WORLD })
             }
             case 'number': {
-                return body[fields[index]] = count()
+                return body[fields[index]] = genNum()
             }
             case 'boolean': {
                 return Math.random() > 0.5 ? true : false
