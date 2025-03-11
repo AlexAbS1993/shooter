@@ -5,6 +5,7 @@ const [productsTable, usersTable] = require('../src/test_tables')
 const MOCK_END_POINT = 'http://mock.com'
 const PRODUCTS = 'products'
 const USERS = 'users'
+const DEFAULT = 'DEFAULT'
 describe('Сущность Request организует работу запросов на удалённый сервер, нагружая тем самым базу данных', () => {
     const test_model = new TestModel()
     let request = new RequestWide(test_model, MOCK_END_POINT)
@@ -43,5 +44,30 @@ describe('Сущность Request организует работу запро�
         expect(counter != 0).toBe(true)
         expect(counter < 999).toBe(true)
         console.log('counter is', counter)
+    })
+    test('Дефолтная статистика записывается после каждого исполнения', () => {
+        let {title} = request.getTableData()
+        request.statisticUpdate(request.INSERT)
+        expect(request.getStatistic()[title]).toEqual({[request.SELECT]: 0, [request.INSERT]: 1, [request.DELETE]:0})
+    })
+    describe('При отправке post-запроса срабатывает автогенерация тела в зависимости от модели', () => {
+        test('Генерируется строка при передаче соответствующих параметров', () => {
+            let proceed = true
+            while (proceed){
+                let {title} = request.getTableData()
+                if(title === PRODUCTS){
+                    proceed = false
+                }
+                else {
+                    request.changeTableIndex()
+                }
+            }
+            let {insertTypes, fields} = request.getTableData()
+            let body = request.construct_body(insertTypes, fields)
+            expect(body.id).toBe(DEFAULT)
+            expect(typeof body.title).toBe('string')
+            expect(typeof body.price).toBe('number')
+            console.log(JSON.stringify(body))
+        })
     })
 })
