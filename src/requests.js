@@ -1,4 +1,4 @@
-let {fetch} = require('undici')
+let {fetch, request} = require('undici')
 const {generate, genNum} = require('../lib/random') 
 const AbstractModel = require('./model')
 
@@ -48,12 +48,12 @@ class RequestWide{
     }
     async toSelect(){
         let destination_point = this.calculate_dest_point(this.SELECT)
-        let response = fetch(destination_point, {
+        request('http://' + destination_point, {
             method: this.GET
         })
         this.statisticUpdate(this.SELECT)
         this.changeTableIndex()
-        return await (await response).json()
+        return
     }
     async toInsert(){
         let destination_point = this.calculate_dest_point(this.INSERT)
