@@ -15,10 +15,26 @@ let model = new TestModel()
 let request = new Request(model, POINT)
 let app = express()
 
-// setInterval(() => {
-//     request.toSelect()
-// }, SELECT_ACT * 1000)
-request.toInsert()
+let selectInterval
+try{
+    selectInterval = setInterval(async () => {
+    request.toSelect()
+}, SELECT_ACT * 1000)
+}
+catch(e){
+    console.log(e.message)
+    clearInterval(selectInterval)
+}
+
+let insertInterval = setInterval(() => {
+        request.toInsert()
+}, INSERT_ACT * 1000)
+
+process.on('uncaughtException', (error) => {
+    console.log('Произошла непредвиденная ошибка. Все вызовы удалённой базы данных отключены')
+    clearInterval(selectInterval)
+    clearInterval(insertInterval)
+})
 
 app.listen(PORT, () => {
     console.log(`Сервер запущен на порту ${PORT}. Установлен уровень нагрузки ${LEVEL} на сервер ${POINT}`)
