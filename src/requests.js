@@ -1,6 +1,7 @@
 let {fetch, request} = require('undici')
 const {generate, genNum} = require('../lib/random') 
 const AbstractModel = require('./model')
+const axios = require('axios')
 
 // Класс запроса, который реализует команды через undici для нагрузки сервера с базой данных
 // Класс принимает модель, которая должна реализовать общее представление о таблицах на основе интерфейса AbstractModel на удалённом сервере 
@@ -59,13 +60,14 @@ class RequestWide{
         let destination_point = this.calculate_dest_point(this.INSERT)
         let {insertTypes, fields} = this.getTableData()
         let body = this.construct_body(insertTypes, fields)
-        let response = fetch(destination_point, {
-            method: this.POST,
-            body
-        })
+        axios.post('http://' + destination_point, body)
+        // let response = request('http://' + destination_point, {
+        //     method: this.POST,
+        //     body: JSON.stringify(body)
+        // })
         this.statisticUpdate(this.INSERT)
         this.changeTableIndex()
-        return await (await response).json()
+        return
     }
     async toDelete(){
         let destination_point = this.calculate_dest_point(this.DELETE)

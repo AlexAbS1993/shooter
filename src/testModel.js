@@ -4,7 +4,7 @@ const [productsTable, usersTable] = require('./test_tables')
 // Дефолтная модель для частного использования
 class TestModel extends AbstractModel{
     tables =[
-        productsTable, usersTable
+        usersTable, productsTable
     ]
     selectRequestSchema = {}
     deleteRequestSchema = {}
