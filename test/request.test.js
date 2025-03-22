@@ -8,6 +8,9 @@ const DEFAULT = 'DEFAULT'
 const STRING = 'string'
 const NUMBER = 'number'
 const BOOLEAN = 'boolean'
+const TITLE = 'title'
+const NAME = 'name'
+
 describe('Сущность Request организует работу запросов на удалённый сервер, нагружая тем самым базу данных', () => {
     const test_model = new TestModel()
     let request = new RequestWide(test_model, MOCK_END_POINT)
@@ -82,6 +85,14 @@ describe('Сущность Request организует работу запро�
             expect(typeof body.title).toBe('string')
             expect(typeof body.price).toBe('number')
             console.log(JSON.stringify(body))
+        })
+        test('Строка генерируется в зависимости от переданного названия поля', () => {
+            let title = request.stringConstructor(TITLE)
+            let name = request.stringConstructor(NAME)
+            expect(typeof title).toBe('string')
+            expect(typeof name).toBe('string')
+            console.log(title + ' - сгенерированный title') 
+            console.log(name + ' - сгенерированный name') 
         })
     })
 })

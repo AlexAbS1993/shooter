@@ -1,4 +1,5 @@
-let {fetch, request} = require('undici')
+let {request} = require('undici')
+const { uniqueNamesGenerator, names, adjectives} = require('unique-names-generator') 
 const {generate, genNum} = require('../lib/random') 
 const AbstractModel = require('./model')
 const axios = require('axios')
@@ -138,7 +139,7 @@ class RequestWide{
             let type = insertTypes[index]
             switch(type){
                 case 'string': {
-                    body[fields[index]] = generate({ minLength: this.MIN_LENGTH_RANDOM_WORLD, maxLength: this.MAX_LENGTH_RANDOM_WORLD })
+                    body[fields[index]] = this.stringConstructor(fields[index])
                     break
                 }
                 case 'number': {
@@ -155,6 +156,23 @@ class RequestWide{
             }
         }
         return body
+    }
+    stringConstructor(title){
+        const NAME = 'name'
+        const TITLE = 'title'
+        switch(title){
+            case NAME: {
+                return uniqueNamesGenerator({dictionaries: [names]})
+            }
+            case TITLE: {
+                let adj = uniqueNamesGenerator({dictionaries: [adjectives]})
+                let ttl = generate({ minLength: this.MIN_LENGTH_RANDOM_WORLD, maxLength: this.MAX_LENGTH_RANDOM_WORLD })
+                return adj.charAt(0).toUpperCase() + adj.slice(1) + ' ' + ttl.charAt(0).toUpperCase() + ttl.slice(1)
+            }
+            default: {
+                return generate({ minLength: this.MIN_LENGTH_RANDOM_WORLD, maxLength: this.MAX_LENGTH_RANDOM_WORLD })
+            }
+        }
     }
 
     construct_params(title, type){
