@@ -7,8 +7,8 @@ let productsTable = {
 let usersTable = {
     title: 'users',
     reqFields: ['*'],
-    fields: ['id', 'name'],
-    insertTypes: ['default', 'string']
+    fields: ['id', 'name', 'age'],
+    insertTypes: ['default', 'string', 'number']
 }
 
 module.exports = [productsTable, usersTable]
