@@ -143,7 +143,7 @@ class RequestWide{
                     break
                 }
                 case 'number': {
-                    body[fields[index]] = genNum()
+                    body[fields[index]] = this.numberConstructor(fields[index])
                     break
                 }
                 case 'boolean': {
@@ -171,6 +171,18 @@ class RequestWide{
             }
             default: {
                 return generate({ minLength: this.MIN_LENGTH_RANDOM_WORLD, maxLength: this.MAX_LENGTH_RANDOM_WORLD })
+            }
+        }
+    }
+    numberConstructor(title){
+        const AGE = 'age'
+        switch(title){
+            case AGE: {
+
+                return genNum()
+            }
+            default: {
+                return genNum()
             }
         }
     }
