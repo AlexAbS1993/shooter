@@ -7,7 +7,8 @@
     "test": "jest",
     "start_min": "cross-env LEVEL=min node --env-file=.env index.js",
     "start_mid": "cross-env LEVEL=middle node --env-file=.env index.js",
-    "start_h": "cross-env LEVEL=high node --env-file=.env index.js"
+    "start_h": "cross-env LEVEL=high node --env-file=.env index.js",
+    "start_custom": "cross-env LEVEL=custom node --env-file=.env index.js"
   },
   "repository": {
     "type": "git",
