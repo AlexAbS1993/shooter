@@ -5,7 +5,8 @@
 const MIN_VALUE = 'min'
 const MIDDLE_VALUE = 'middle'
 const HIGH_VALUE = 'high'
-let values_lvls = [MIN_VALUE, MIDDLE_VALUE, HIGH_VALUE]
+const CUSTOM_VALUE = 'custom'
+let values_lvls = [MIN_VALUE, MIDDLE_VALUE, HIGH_VALUE, CUSTOM_VALUE]
 
 function configDefinition(lvl){
     if (!values_lvls.includes(lvl)){
@@ -21,6 +22,9 @@ ${values_lvls.map((value, index) => `${index+1}) ${value}`).join(', \n')}`)
         }
         case HIGH_VALUE: {
             return `.env.${HIGH_VALUE}`
+        }
+        case CUSTOM_VALUE: {
+            return `.env.${CUSTOM_VALUE}`
         }
         default: {
             throw new Error('Для данного значения ещё не реализован обработчик. Обратитесь к разработчику программы')
