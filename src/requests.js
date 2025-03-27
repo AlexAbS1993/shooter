@@ -21,6 +21,10 @@ class RequestWide{
     SELECT_REQUEST_SCHEMA = "SELECT_REQUEST_SCHEMA"
     DELETE_REQUEST_SCHEMA = 'DELETE_REQUEST_SCHEMA'
     INSERT_REQUEST_SCHEMA = 'INSERT_REQUEST_SCHEMA'
+    MIN_AGE = 18
+    MAX_AGE = 80
+    MIN_BIRTH_YEAR = 1930
+    MAX_BIRTH_YEAR = 2010
     #operation_matching_schema = {
         [this.DELETE]:this.DELETE_REQUEST_SCHEMA,
         [this.SELECT]: this.SELECT_REQUEST_SCHEMA,
@@ -178,15 +182,24 @@ class RequestWide{
         const AGE = 'age'
         switch(title){
             case AGE: {
-
-                return genNum()
+                return genNum(this.MIN_AGE, this.MAX_AGE)
             }
             default: {
+                if (this.defineBirthYearTitleType(title)){
+                    return genNum(this.MIN_BIRTH_YEAR, this.MAX_BIRTH_YEAR)
+                }
                 return genNum()
             }
         }
     }
 
+    defineBirthYearTitleType(title){
+        const birth_year_titles = ['birth_year', 'year_birth', 'year_of_birth', 'birthyear', 'birthYear']
+        if (birth_year_titles.includes(title)){
+            return true
+        }
+        return false
+    }
     construct_params(title, type){
         return `${title}=${this.generate_value_by_type(type)}`
     }
